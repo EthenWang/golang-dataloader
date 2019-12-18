@@ -1,9 +1,13 @@
 package models
 
+import "fmt"
+
 type TranslationModel struct {
-	DsTranslation struct {
-		Translations []TranslationItem `json:"tt-translation"`
-	} `json:"ds-translation"`
+	DsTranslation TranslationDataWraper `json:"ds-translation"`
+}
+
+type TranslationDataWraper struct {
+	Translations []TranslationItem `json:"tt-translation"`
 }
 
 type TranslationItem struct {
@@ -32,4 +36,13 @@ type TranslationItem struct {
 	// "created-time": "",
 	// "reserved-support": "",
 	// "sd-abbreviation": ""
+}
+
+func (s *TranslationModel) Id() string {
+	return "default"
+}
+
+func (s *TranslationModel) Query(id string) *TranslationItem {
+	fmt.Println("TranslationModel Query: %s", id)
+	return nil
 }

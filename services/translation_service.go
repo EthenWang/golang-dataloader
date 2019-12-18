@@ -6,16 +6,11 @@ import (
 	dlerror "dataloader/utils/error"
 	"encoding/json"
 	"path"
+	"reflect"
 	"strings"
 )
 
 type translationCollection map[string]*models.TranslationItem
-
-var (
-	basePath         string
-	translationArray = make(map[string]*[]models.TranslationItem)
-	translationMap   = make(map[string]translationCollection)
-)
 
 type TranslationService interface {
 	GetAll(lang string) ([]models.TranslationItem, error)
@@ -28,25 +23,34 @@ type TranslationService interface {
 	GetAvailableLanguages() ([]string, error)
 }
 
-func NewTranslationService(config *models.AppConfig) TranslationService {
-	basePath = path.Join(config.DataPath, "sd-translation")
-	return &translationService{}
+type translationService struct {
+	appConfig        *models.AppConfig
+	translationMap   map[string]translationCollection
+	translationArray map[string]*[]models.TranslationItem
 }
 
-type translationService struct{}
+func NewTranslationService(config *models.AppConfig) TranslationService {
+	return &translationService{
+		appConfig:        config,
+		translationMap:   make(map[string]translationCollection),
+		translationArray: make(map[string]*[]models.TranslationItem),
+	}
+}
 
-func (*translationService) GetAll(lang string) ([]models.TranslationItem, error) {
-	err := loadData(lang)
+func (s *translationService) GetAll(lang string) ([]models.TranslationItem, error) {
+	err := s.loadData(lang)
 	if err == nil {
-		return *translationArray[lang], nil
+		return *s.translationArray[lang], nil
 	}
 	return nil, err
 }
 
-func (*translationService) Get(id string, lang string) (models.TranslationItem, error) {
-	err := loadData(lang)
+func (s *translationService) Get(id string, lang string) (models.TranslationItem, error) {
+	ds := NewJsonDataService(s.appConfig, reflect.TypeOf(models.TranslationModel{}))
+	ds.Query("")
+	err := s.loadData(lang)
 	if err == nil {
-		if tran, ok := translationMap[lang][id]; ok {
+		if tran, ok := s.translationMap[lang][id]; ok {
 			return *tran, nil
 		}
 	}
@@ -65,14 +69,14 @@ func (s *translationService) GetList(ids []string, lang string) ([]models.Transl
 	return res, nil
 }
 
-func updateTranslation(tran models.TranslationItem, lang string) error {
-	err := loadData(lang)
+func (s *translationService) updateTranslation(tran models.TranslationItem, lang string) error {
+	err := s.loadData(lang)
 	if err != nil {
 		return err
 	}
 
-	if trans, ok := translationMap[lang]; ok {
-		err = validate(tran, lang)
+	if trans, ok := s.translationMap[lang]; ok {
+		err = s.validate(tran, lang)
 		if err != nil {
 			return err
 		}
@@ -83,31 +87,31 @@ func updateTranslation(tran models.TranslationItem, lang string) error {
 }
 
 func (s *translationService) Update(tran models.TranslationItem, lang string) error {
-	err := updateTranslation(tran, lang)
+	err := s.updateTranslation(tran, lang)
 	if err != nil {
 		return err
 	}
-	utils.WriteJson(translationArray[lang], getPath(lang))
+	s.saveData(lang)
 	return nil
 }
 
 func (s *translationService) UpdateList(list []models.TranslationItem, lang string) error {
 	if list != nil {
 		for _, tran := range list {
-			updateTranslation(tran, lang)
+			s.updateTranslation(tran, lang)
 		}
-		utils.WriteJson(translationArray[lang], getPath(lang))
+		s.saveData(lang)
 	}
 	return nil
 }
 
-func deleteTranslation(id string, lang string) error {
-	err := loadData(lang)
+func (s *translationService) deleteTranslation(id string, lang string) error {
+	err := s.loadData(lang)
 	if err != nil {
 		return err
 	}
 
-	if trans, ok := translationMap[lang]; ok {
+	if trans, ok := s.translationMap[lang]; ok {
 		if _, ok = trans[id]; ok {
 			delete(trans, id)
 			return nil
@@ -116,30 +120,30 @@ func deleteTranslation(id string, lang string) error {
 	return dlerror.NewDataLoaderError(dlerror.LanguageNotExist)
 }
 
-func (*translationService) Delete(id string, lang string) error {
-	err := deleteTranslation(id, lang)
+func (s *translationService) Delete(id string, lang string) error {
+	err := s.deleteTranslation(id, lang)
 	if err != nil {
 		return err
 	}
-	utils.WriteJson(translationArray[lang], getPath(lang))
+	s.saveData(lang)
 	return nil
 }
 
 func (s *translationService) DeleteList(ids []string, lang string) error {
 	if ids != nil {
 		for _, id := range ids {
-			err := deleteTranslation(id, lang)
+			err := s.deleteTranslation(id, lang)
 			if err != nil {
 				return err
 			}
 		}
-		utils.WriteJson(translationArray[lang], getPath(lang))
+		s.saveData(lang)
 	}
 	return nil
 }
 
-func (*translationService) GetAvailableLanguages() ([]string, error) {
-	list, err := utils.GetFileList(basePath)
+func (s *translationService) GetAvailableLanguages() ([]string, error) {
+	list, err := utils.GetFileList(s.appConfig.DataPath)
 	if err != nil {
 		fileList := make([]string, 0)
 		for _, l := range list {
@@ -150,8 +154,8 @@ func (*translationService) GetAvailableLanguages() ([]string, error) {
 	return nil, err
 }
 
-func validate(tran models.TranslationItem, lang string) error {
-	if trans, ok := translationArray[lang]; ok {
+func (s *translationService) validate(tran models.TranslationItem, lang string) error {
+	if trans, ok := s.translationArray[lang]; ok {
 		for _, t := range *trans {
 			if t.Text == tran.Text {
 				return dlerror.NewDataLoaderError(dlerror.TranslationExist)
@@ -162,13 +166,13 @@ func validate(tran models.TranslationItem, lang string) error {
 	return dlerror.NewDataLoaderError(dlerror.LanguageNotExist)
 }
 
-func getPath(lang string) string {
-	return path.Join(basePath, strings.Join([]string{string(lang), ".json"}, ""))
+func (s *translationService) getPath(lang string) string {
+	return path.Join(s.appConfig.DataPath, strings.Join([]string{lang, ".json"}, ""))
 }
 
-func loadData(lang string) error {
-	if translationMap[lang] == nil {
-		jsonData, err := utils.ReadJson(getPath(lang))
+func (s *translationService) loadData(lang string) error {
+	if s.translationMap[lang] == nil {
+		jsonData, err := utils.ReadJson(s.getPath(lang))
 		if err != nil {
 			return err
 		}
@@ -179,12 +183,22 @@ func loadData(lang string) error {
 			return err
 		}
 
-		translationArray[lang] = &transData.DsTranslation.Translations
+		arr := transData.DsTranslation.Translations
+		s.translationArray[lang] = &arr
 		m := make(translationCollection)
-		for _, t := range *translationArray[lang] {
-			m[t.Id] = &t
+		for i := 0; i < len(arr); i++ {
+			m[arr[i].Id] = &arr[i]
 		}
-		translationMap[lang] = m
+		s.translationMap[lang] = m
 	}
 	return nil
+}
+
+func (s *translationService) saveData(lang string) error {
+	data := models.TranslationModel{
+		DsTranslation: models.TranslationDataWraper{
+			Translations: *s.translationArray[lang],
+		},
+	}
+	return utils.WriteJson(data, s.getPath(lang))
 }

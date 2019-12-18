@@ -24,7 +24,7 @@ func (c *TranslationController) Get(lang string) []models.TranslationItem {
 	return data
 }
 
-// GetById - return id
+// GetById - return a specific translation. param "id" is translation code
 func (c *TranslationController) GetById(lang string, id string) models.TranslationItem {
 	data, _ := c.TranslationService.Get(id, lang)
 	return data

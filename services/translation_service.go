@@ -167,7 +167,7 @@ func (s *translationService) validate(tran models.TranslationItem, lang string) 
 }
 
 func (s *translationService) getPath(lang string) string {
-	return path.Join(s.appConfig.DataPath, strings.Join([]string{lang, ".json"}, ""))
+	return path.Join(s.appConfig.DataPath, "sd-translation", strings.Join([]string{lang, ".json"}, ""))
 }
 
 func (s *translationService) loadData(lang string) error {

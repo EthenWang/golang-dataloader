@@ -27,7 +27,7 @@ type jsonDataService struct {
 
 func NewJsonDataService(appConfig *models.AppConfig, typ reflect.Type) JsonDataService {
 	return &jsonDataService{
-		appConfig, reflect.Zero(typ),
+		appConfig, reflect.New(typ),
 	}
 }
 
@@ -37,7 +37,8 @@ func (s *jsonDataService) Query(id string) interface{} {
 		return nil
 	}
 
-	err = json.Unmarshal(*jsonData, &s.data)
+	data := s.data.Elem()
+	err = json.Unmarshal(*jsonData, &data)
 	if err != nil {
 		return nil
 	}

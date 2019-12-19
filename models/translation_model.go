@@ -42,7 +42,7 @@ func (s *TranslationModel) Id() string {
 	return "default"
 }
 
-func (s *TranslationModel) Query(id string) *TranslationItem {
+func (s *TranslationModel) Query(id string) interface{} {
 	fmt.Println("TranslationModel Query: %s", id)
 	return nil
 }

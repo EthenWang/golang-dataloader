@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 )
 
-func ReadJson(path string) (*[]byte, error) {
+func ReadJson(path string) ([]byte, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	return &data, nil
+	return data, nil
 }
 
 func WriteJson(data interface{}, filePath string) error {

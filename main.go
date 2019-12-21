@@ -7,6 +7,7 @@ import (
 	"dataloader/utils"
 	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
@@ -36,7 +37,12 @@ func main() {
 }
 
 func translation(app *mvc.Application) {
-	app.Register(services.NewTranslationService(&appconfig))
+	//app.Register(services.NewTranslationService(&appconfig))
+	app.Register(services.NewJsonDataService(
+		&appconfig,
+		"sd-translation",
+		reflect.TypeOf(models.TranslationModel{}),
+	))
 	app.Handle(new(controllers.TranslationController))
 }
 
@@ -54,7 +60,7 @@ func readConfig() {
 		fmt.Println(err)
 	}
 
-	err = json.Unmarshal(*data, &appconfig)
+	err = json.Unmarshal(data, &appconfig)
 	if err != nil {
 		fmt.Println(err)
 	}

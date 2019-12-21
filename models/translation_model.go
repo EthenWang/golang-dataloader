@@ -1,9 +1,8 @@
 package models
 
-import "fmt"
-
 type TranslationModel struct {
 	DsTranslation TranslationDataWraper `json:"ds-translation"`
+	_dict         map[string]*TranslationItem
 }
 
 type TranslationDataWraper struct {
@@ -11,11 +10,11 @@ type TranslationDataWraper struct {
 }
 
 type TranslationItem struct {
+	SystemId string `json:"system-id"`
+	Lang     string `json:"sd-language"`
+	Region   string `json:"sd-region"`
 	Id       string `json:"sd-code"`
 	Text     string `json:"sd-text"`
-	Lang     string `json:"sd-language"`
-	SystemId string `json:"system-id"`
-	Region   string `json:"sd-region"`
 	// "system-id": "Apprise",
 	// "sd-language": "DEFAULT",
 	// "sd-region": "",
@@ -38,11 +37,18 @@ type TranslationItem struct {
 	// "sd-abbreviation": ""
 }
 
-func (s *TranslationModel) Id() string {
-	return "default"
+func (s *TranslationModel) Prepare() {
+	if trans := s.DsTranslation.Translations; trans != nil {
+		s._dict = make(map[string]*TranslationItem)
+		for i := 0; i < len(trans); i++ {
+			s._dict[trans[i].Id] = &trans[i]
+		}
+	}
 }
 
 func (s *TranslationModel) Query(id string) interface{} {
-	fmt.Println("TranslationModel Query: %s", id)
+	if tran, exist := s._dict[id]; exist {
+		return tran
+	}
 	return nil
 }

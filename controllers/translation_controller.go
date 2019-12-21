@@ -9,8 +9,9 @@ import (
 )
 
 type TranslationController struct {
-	Ctx                iris.Context
-	TranslationService services.TranslationService
+	Ctx iris.Context
+	//TranslationService services.TranslationService
+	DataService services.JsonDataService
 }
 
 func (c *TranslationController) BeforeActivation(b mvc.BeforeActivation) {
@@ -20,12 +21,17 @@ func (c *TranslationController) BeforeActivation(b mvc.BeforeActivation) {
 
 // Get - return all translations
 func (c *TranslationController) Get(lang string) []models.TranslationItem {
-	data, _ := c.TranslationService.GetAll(lang)
-	return data
+	//data, _ := c.TranslationService.GetAll(lang)
+	//return data
+	return nil
 }
 
 // GetById - return a specific translation. param "id" is translation code
 func (c *TranslationController) GetById(lang string, id string) models.TranslationItem {
-	data, _ := c.TranslationService.Get(id, lang)
+	c.DataService.Load(lang)
+	data, ok := c.DataService.Query(id).(models.TranslationItem)
+	if !ok {
+		return models.TranslationItem{}
+	}
 	return data
 }

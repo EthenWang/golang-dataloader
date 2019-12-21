@@ -5,8 +5,10 @@ import "errors"
 type statusCode uint
 
 const (
-	LanguageNotExist statusCode = 1
-	TranslationExist statusCode = 2
+	InvalidDataType statusCode = iota
+	DataIsNil
+	LanguageNotExist
+	TranslationExist
 )
 
 type dataLoaderError struct {

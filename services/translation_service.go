@@ -6,7 +6,6 @@ import (
 	dlerror "dataloader/utils/error"
 	"encoding/json"
 	"path"
-	"reflect"
 	"strings"
 )
 
@@ -46,8 +45,6 @@ func (s *translationService) GetAll(lang string) ([]models.TranslationItem, erro
 }
 
 func (s *translationService) Get(id string, lang string) (models.TranslationItem, error) {
-	ds := NewJsonDataService(s.appConfig, reflect.TypeOf(models.TranslationModel{}))
-	ds.Query("")
 	err := s.loadData(lang)
 	if err == nil {
 		if tran, ok := s.translationMap[lang][id]; ok {
@@ -178,7 +175,7 @@ func (s *translationService) loadData(lang string) error {
 		}
 
 		var transData models.TranslationModel
-		err = json.Unmarshal(*jsonData, &transData)
+		err = json.Unmarshal(jsonData, &transData)
 		if err != nil {
 			return err
 		}

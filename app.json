@@ -1,3 +1,4 @@
 {
-    "dataPath": "testdata"
+    "dataPath": "testdata",
+    "useCache": true
 }

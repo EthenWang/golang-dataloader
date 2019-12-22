@@ -7,8 +7,6 @@ import (
 	"dataloader/utils"
 	"encoding/json"
 	"fmt"
-	"reflect"
-
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
@@ -26,7 +24,7 @@ func main() {
 	readConfig()
 
 	mvc.Configure(app.Party("/translation"), translation)
-	mvc.Configure(app.Party("/messages"), messages)
+	mvc.Configure(app.Party("/message"), message)
 	mvc.Configure(app.Party("/screen"), screen)
 
 	app.Run(
@@ -41,17 +39,27 @@ func translation(app *mvc.Application) {
 	app.Register(services.NewJsonDataService(
 		&appconfig,
 		"sd-translation",
-		reflect.TypeOf(models.TranslationModel{}),
+		&models.TranslationModel{},
 	))
 	app.Handle(new(controllers.TranslationController))
 }
 
-func messages(app *mvc.Application) {
-
+func message(app *mvc.Application) {
+	app.Register(services.NewJsonDataService(
+		&appconfig,
+		"sd-message",
+		&models.MessageModel{},
+	))
+	app.Handle(new(controllers.MessageController))
 }
 
 func screen(app *mvc.Application) {
-
+	app.Register(services.NewJsonDataService(
+		&appconfig,
+		"sd-screen",
+		&models.ScreenDataModel{},
+	))
+	app.Handle(new(controllers.ScreenController))
 }
 
 func readConfig() {

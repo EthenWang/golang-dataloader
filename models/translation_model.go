@@ -10,31 +10,30 @@ type TranslationDataWraper struct {
 }
 
 type TranslationItem struct {
-	SystemId string `json:"system-id"`
-	Lang     string `json:"sd-language"`
-	Region   string `json:"sd-region"`
-	Id       string `json:"sd-code"`
-	Text     string `json:"sd-text"`
-	// "system-id": "Apprise",
-	// "sd-language": "DEFAULT",
-	// "sd-region": "",
-	// "sd-text": "Additional Charges",
-	// "update-by": "system",
-	// "update-time": "15:05:11",
-	// "update-date": "2005-11-18",
-	// "created-by": "system",
-	// "created-date": "2005-11-18",
-	// "reserved-standard": "",
-	// "reserved-custom": "",
-	// "sd-code": "00000001",
-	// "change-reference-num": 10151259.0,
-	// "layer-code": "Default",
-	// "user-or-group-id": "",
-	// "layer-type": "%DEFAULT%",
-	// "reserved-free": "",
-	// "created-time": "",
-	// "reserved-support": "",
-	// "sd-abbreviation": ""
+	SystemId       string `json:"system-id"`
+	Lang           string `json:"sd-language"`
+	Region         string `json:"sd-region"`
+	Id             string `json:"sd-code"`
+	Text           string `json:"sd-text"`
+	LayerCode      string `json:"layer-code"`
+	UserOrGroupId  string `json:"user-or-group-id"`
+	LayerType      string `json:"layer-type"`
+	SdAbbreviation string `json:"sd-abbreviation"`
+	// UpdateBy           string  `json:"update-by"`
+	// UpdateTime         string  `json:"update-time"`
+	// UpdateDate         string  `json:"update-date"`
+	// CreatedBy          string  `json:"created-by"`
+	// CreatedDate        string  `json:"created-date"`
+	// ReservedStandard   string  `json:"reserved-standard"`
+	// ReservedCustom     string  `json:"reserved-custom"`
+	// ChangeReferenceNum float32 `json:"change-reference-num"`
+	// ReservedFree       string  `json:"reserved-free"`
+	// CreatedTime        string  `json:"created-time"`
+	// ReservedSupport    string  `json:"reserved-support"`
+}
+
+func (s *TranslationModel) New() DataLoaderData {
+	return &TranslationModel{}
 }
 
 func (s *TranslationModel) Prepare() {
@@ -46,9 +45,13 @@ func (s *TranslationModel) Prepare() {
 	}
 }
 
+func (s *TranslationModel) All() interface{} {
+	return s.DsTranslation.Translations
+}
+
 func (s *TranslationModel) Query(id string) interface{} {
 	if tran, exist := s._dict[id]; exist {
-		return tran
+		return *tran
 	}
 	return nil
 }

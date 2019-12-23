@@ -15,15 +15,14 @@ type ScreenController struct {
 
 func (c *ScreenController) BeforeActivation(b mvc.BeforeActivation) {
 	b.Handle("GET", "/{id}", "GetById")
-	b.Handle("GET", "/list", "GetScreenList")
+	//b.Handle("GET", "/list", "GetScreenList")
 }
 
 // GetById - return a specific translation. param "id" is translation code
 func (c *ScreenController) GetById(id string) models.ScreenDataModel {
-	c.DataService.Load(id)
-	data, ok := c.DataService.Query(id).(models.TranslationItem)
-	if !ok {
-		return models.TranslationItem{}
+	data, err := c.DataService.Load(id)
+	if err != nil {
+		return models.ScreenDataModel{}
 	}
-	return data
+	return *data.(*models.ScreenDataModel)
 }

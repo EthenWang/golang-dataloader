@@ -43,43 +43,43 @@ type ScreenModel struct {
 }
 
 type ScreenObjModel struct {
-	SystemId          string `json:"system-id"`
-	LayerCode         string `json:"layer-code"`
-	UserOrGroupId     string `json:"user-or-group-id"`
-	LayerType         string `json:"layer-type"`
-	Name              string `json:"screen-obj-name"`
-	Type              string `json:"obj-type"`
-	Format            string `json:"obj-format"`
-	FormatType        string `json:"obj-format-type"`
-	ScreenName        string `json:"screen-name"`
-	Sequence          int    `json:"screen-order"`
-	LabelCode         string `json:"obj-label-code"`
-	ToolTip           string `json:"obj-tooltip-code"`
-	IsActive          bool   `json:"obj-active"`
-	IsRequired        bool   `json:"obj-required"`
-	IsVisible         bool   `json:"obj-visible"`
-	IsEnabled         bool   `json:"obj-enabled"`
-	IsDisplay         bool   `json:"obj-display"`
-	IsUnLabelled      bool   `json:"obj-unlabelled"`
-	IsNeedValidation  bool   `json:"obj-needs-validation"`
-	Parent            string `json:"obj-parent"`
-	Row               int    `json:"obj-row"`
-	RowSpan           int    `json:"row-span"`
-	Column            int    `json:"obj-col"`
-	ColumnSpan        int    `json:"col-span"`
-	Height            int    `json:"obj-height"`
-	Width             int    `json:"obj-width"`
-	Image             string `json:"obj-image"`
-	SpecialCase       string `json:"special-case"`
-	InitValue         string `json:"obj-initial-value"`
-	EventList         string `json:"obj-process-response"`
-	Align             string `json:"obj-align"`
-	CellAlign         string `json:"obj-cell-align"`
-	GridAttributes    string `json:"grid-attributes"`
-	UserDefinedType   string `json:"user-def-type"`
-	UserDefinedNumber int    `json:"user-def-num"`
-	RelatedTabProgram string `json:"rel-tabpage-pgm"`
-	DropName          string `json:"drop-name"`
+	SystemId          string  `json:"system-id"`
+	LayerCode         string  `json:"layer-code"`
+	UserOrGroupId     string  `json:"user-or-group-id"`
+	LayerType         string  `json:"layer-type"`
+	Name              string  `json:"screen-obj-name"`
+	Type              string  `json:"obj-type"`
+	Format            string  `json:"obj-format"`
+	FormatType        string  `json:"obj-format-type"`
+	ScreenName        string  `json:"screen-name"`
+	Sequence          int     `json:"screen-order"`
+	LabelCode         string  `json:"obj-label-code"`
+	ToolTip           string  `json:"obj-tooltip-code"`
+	IsActive          bool    `json:"obj-active"`
+	IsRequired        bool    `json:"obj-required"`
+	IsVisible         bool    `json:"obj-visible"`
+	IsEnabled         bool    `json:"obj-enabled"`
+	IsDisplay         bool    `json:"obj-display"`
+	IsUnLabelled      bool    `json:"obj-unlabelled"`
+	IsNeedValidation  bool    `json:"obj-needs-validation"`
+	Parent            string  `json:"obj-parent"`
+	Row               float32 `json:"obj-row"`
+	RowSpan           int     `json:"row-span"`
+	Column            float32 `json:"obj-col"`
+	ColumnSpan        int     `json:"col-span"`
+	Height            float32 `json:"obj-height"`
+	Width             float32 `json:"obj-width"`
+	Image             string  `json:"obj-image"`
+	SpecialCase       string  `json:"special-case"`
+	InitValue         string  `json:"obj-initial-value"`
+	EventList         string  `json:"obj-process-response"`
+	Align             string  `json:"obj-align"`
+	CellAlign         string  `json:"obj-cell-align"`
+	GridAttributes    string  `json:"grid-attributes"`
+	UserDefinedType   string  `json:"user-def-type"`
+	UserDefinedNumber int     `json:"user-def-num"`
+	RelatedTabProgram string  `json:"rel-tabpage-pgm"`
+	DropName          string  `json:"drop-name"`
 	// UpdateBy           string  `json:"update-by"`
 	// UpdateTime         string  `json:"update-time"`
 	// UpdateDate         string  `json:"update-date"`
@@ -118,29 +118,29 @@ type ScreenObjModel struct {
 }
 
 type ScreenChildObjModel struct {
-	SystemId          string `json:"system-id"`
-	LayerCode         string `json:"layer-code"`
-	UserOrGroupId     string `json:"user-or-group-id"`
-	LayerType         string `json:"layer-type"`
-	Name              string `json:"obj-name"`
-	Type              string `json:"obj-type"`
-	Format            string `json:"obj-format"`
-	FormatType        string `json:"obj-format-type"`
-	ScreenName        string `json:"screen-name"`
-	Sequence          int    `json:"screen-order"`
-	LabelCode         string `json:"obj-label-code"`
-	ToolTip           string `json:"obj-tooltip-code"`
-	Parent            string `json:"obj-parent"`
-	IsVisible         bool   `json:"obj-visible"`
-	IsEnabled         bool   `json:"obj-enabled"`
-	Width             int    `json:"obj-width"`
-	Image             string `json:"obj-image"`
-	RelatedTable      string `json:"related-table"`
-	RelatedField      string `json:"related-field"`
-	InitValue         string `json:"obj-initial-value"`
-	UserDefinedType   string `json:"user-def-type"`
-	UserDefinedNumber int    `json:"user-def-num"`
-	DropName          string `json:"drop-name"`
+	SystemId          string  `json:"system-id"`
+	LayerCode         string  `json:"layer-code"`
+	UserOrGroupId     string  `json:"user-or-group-id"`
+	LayerType         string  `json:"layer-type"`
+	Name              string  `json:"obj-name"`
+	Type              string  `json:"obj-type"`
+	Format            string  `json:"obj-format"`
+	FormatType        string  `json:"obj-format-type"`
+	ScreenName        string  `json:"screen-name"`
+	Sequence          int     `json:"screen-order"`
+	LabelCode         string  `json:"obj-label-code"`
+	ToolTip           string  `json:"obj-tooltip-code"`
+	Parent            string  `json:"obj-parent"`
+	IsVisible         bool    `json:"obj-visible"`
+	IsEnabled         bool    `json:"obj-enabled"`
+	Width             float32 `json:"obj-width"`
+	Image             string  `json:"obj-image"`
+	RelatedTable      string  `json:"related-table"`
+	RelatedField      string  `json:"related-field"`
+	InitValue         string  `json:"obj-initial-value"`
+	UserDefinedType   string  `json:"user-def-type"`
+	UserDefinedNumber int     `json:"user-def-num"`
+	DropName          string  `json:"drop-name"`
 	// UpdateBy           string  `json:"update-by"`
 	// UpdateTime         string  `json:"update-time"`
 	// UpdateDate         string  `json:"update-date"`
@@ -167,24 +167,4 @@ type ScreenChildObjModel struct {
 
 func (s *ScreenDataModel) New() DataLoaderData {
 	return &ScreenDataModel{}
-}
-
-func (s *ScreenDataModel) Prepare() {
-	if trans := s.DsTranslation.Translations; trans != nil {
-		s._dict = make(map[string]*TranslationItem)
-		for i := 0; i < len(trans); i++ {
-			s._dict[trans[i].Id] = &trans[i]
-		}
-	}
-}
-
-func (s *ScreenDataModel) All() interface{} {
-	return s.DsTranslation.Translations
-}
-
-func (s *ScreenDataModel) Query(id string) interface{} {
-	if tran, exist := s._dict[id]; exist {
-		return *tran
-	}
-	return nil
 }

@@ -20,20 +20,27 @@ func (c *MessageController) BeforeActivation(b mvc.BeforeActivation) {
 
 // Get - return all translations
 func (c *MessageController) Get(lang string) []models.MessageItem {
-	c.DataService.Load(lang)
-	data, ok := c.DataService.All().([]models.MessageItem)
+	data, err := c.DataService.Load(lang)
+	if err != nil {
+		return nil
+	}
+	qdata, ok := data.(models.Query)
 	if !ok {
 		return nil
 	}
-	return data
+
+	return qdata.All().([]models.MessageItem)
 }
 
 // GetById - return a specific translation. param "id" is translation code
 func (c *MessageController) GetById(lang string, id string) models.MessageItem {
-	c.DataService.Load(lang)
-	data, ok := c.DataService.Query(id).(models.MessageItem)
+	data, err := c.DataService.Load(lang)
+	if err != nil {
+		return models.MessageItem{}
+	}
+	qdata, ok := data.(models.Query)
 	if !ok {
 		return models.MessageItem{}
 	}
-	return data
+	return qdata.Query(id).(models.MessageItem)
 }

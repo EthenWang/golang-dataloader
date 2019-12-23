@@ -1,9 +1,6 @@
 package models
 
 type DataLoaderData interface {
-	Prepare()
-	All() interface{}
-	Query(id string) interface{}
 	// Update(data DataLoaderDataItem) error
 	// Delete(id string) error
 }

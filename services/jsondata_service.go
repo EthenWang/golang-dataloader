@@ -3,16 +3,13 @@ package services
 import (
 	"dataloader/models"
 	"dataloader/utils"
-	dlerror "dataloader/utils/error"
 	"encoding/json"
 	"path"
 	"strings"
 )
 
 type JsonDataService interface {
-	Load(name string) error
-	All() interface{}
-	Query(id string) interface{}
+	Load(name string) (models.DataLoaderData, error)
 }
 
 type jsonDataService struct {
@@ -37,14 +34,14 @@ func NewJsonDataService(appConfig *models.AppConfig, path string, creator models
 	}
 }
 
-func (s *jsonDataService) Load(name string) error {
-	if _, exist := cache[s.path][name]; exist {
-		return nil
+func (s *jsonDataService) Load(name string) (models.DataLoaderData, error) {
+	if data, exist := cache[s.path][name]; exist {
+		return data, nil
 	}
 
 	jsonData, err := utils.ReadJson(s.getPath(name))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// research how to use reflect to create model dynamically
@@ -66,29 +63,18 @@ func (s *jsonDataService) Load(name string) error {
 	err = json.Unmarshal(jsonData, s.data)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	s.data.Prepare()
+	if qdata, ok := s.data.(models.Query); ok {
+		qdata.Prepare()
+	}
+
 	if s.appConfig.UseCache {
 		cache[s.path][name] = s.data
 	}
 
-	return nil
-}
-
-func (s *jsonDataService) All() interface{} {
-	if s.data == nil {
-		return dlerror.NewDataLoaderError(dlerror.DataIsNil)
-	}
-	return s.data.All()
-}
-
-func (s *jsonDataService) Query(id string) interface{} {
-	if s.data == nil {
-		return dlerror.NewDataLoaderError(dlerror.DataIsNil)
-	}
-	return s.data.Query(id)
+	return s.data, nil
 }
 
 func (s *jsonDataService) getPath(name string) string {

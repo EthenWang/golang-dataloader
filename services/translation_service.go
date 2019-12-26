@@ -192,10 +192,11 @@ func (s *translationService) loadData(lang string) error {
 }
 
 func (s *translationService) saveData(lang string) error {
-	data := models.TranslationModel{
-		DsTranslation: models.TranslationDataWraper{
-			Translations: *s.translationArray[lang],
-		},
-	}
-	return utils.WriteJson(data, s.getPath(lang))
+	// data := models.TranslationModel{
+	// 	DsTranslation: models.TranslationDataWraper{
+	// 		Translations: *s.translationArray[lang],
+	// 	},
+	// }
+	// return utils.WriteJson(data, s.getPath(lang))
+	return nil
 }

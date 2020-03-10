@@ -13,10 +13,10 @@ type JsonDataService interface {
 }
 
 type jsonDataService struct {
-	appConfig *models.AppConfig
-	path      string
-	creator   models.ModelCreator
-	data      models.DataLoaderData
+	appConfig    *models.AppConfig
+	path         string
+	modelCreator models.ModelCreator
+	data         models.DataLoaderData
 }
 
 var cache map[string]map[string]models.DataLoaderData
@@ -30,7 +30,7 @@ func NewJsonDataService(appConfig *models.AppConfig, path string, creator models
 	}
 
 	return &jsonDataService{
-		appConfig, path, creator, creator.New(),
+		appConfig, path, creator, nil,
 	}
 }
 
@@ -59,6 +59,8 @@ func (s *jsonDataService) Load(name string) (models.DataLoaderData, error) {
 	// if !ok {
 	// 	return dlerror.NewDataLoaderError(dlerror.InvalidDataType)
 	// }
+
+	s.data = s.modelCreator.New()
 
 	err = json.Unmarshal(jsonData, s.data)
 

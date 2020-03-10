@@ -18,7 +18,7 @@ func (c *MessageController) BeforeActivation(b mvc.BeforeActivation) {
 	b.Handle("GET", "/{lang}/{id}", "GetById")
 }
 
-// Get - return all translations
+// Get - return all messages
 func (c *MessageController) Get(lang string) []models.MessageItem {
 	data, err := c.DataService.Load(lang)
 	if err != nil {
@@ -32,7 +32,7 @@ func (c *MessageController) Get(lang string) []models.MessageItem {
 	return qdata.All().([]models.MessageItem)
 }
 
-// GetById - return a specific translation. param "id" is translation code
+// GetById - return a specific message. param "id" is message code
 func (c *MessageController) GetById(lang string, id string) models.MessageItem {
 	data, err := c.DataService.Load(lang)
 	if err != nil {

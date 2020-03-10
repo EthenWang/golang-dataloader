@@ -18,7 +18,7 @@ func (c *ScreenController) BeforeActivation(b mvc.BeforeActivation) {
 	//b.Handle("GET", "/list", "GetScreenList")
 }
 
-// GetById - return a specific translation. param "id" is translation code
+// GetById - return a specific screen. param "id" is screen name
 func (c *ScreenController) GetById(id string) models.ScreenDataModel {
 	data, err := c.DataService.Load(id)
 	if err != nil {

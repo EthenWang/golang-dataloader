@@ -1,12 +1,10 @@
 package models
 
 type TranslationModel struct {
-	DsTranslation TranslationDataWraper `json:"ds-translation"`
-	_dict         map[string]*TranslationItem
-}
-
-type TranslationDataWraper struct {
-	Translations []TranslationItem `json:"tt-translation"`
+	DsTranslation struct {
+		Translations []TranslationItem `json:"tt-translation"`
+	} `json:"ds-translation"`
+	_dict map[string]*TranslationItem
 }
 
 type TranslationItem struct {
@@ -19,17 +17,21 @@ type TranslationItem struct {
 	UserOrGroupId  string `json:"user-or-group-id"`
 	LayerType      string `json:"layer-type"`
 	SdAbbreviation string `json:"sd-abbreviation"`
-	// UpdateBy           string  `json:"update-by"`
-	// UpdateTime         string  `json:"update-time"`
-	// UpdateDate         string  `json:"update-date"`
-	// CreatedBy          string  `json:"created-by"`
-	// CreatedDate        string  `json:"created-date"`
-	// ReservedStandard   string  `json:"reserved-standard"`
-	// ReservedCustom     string  `json:"reserved-custom"`
-	// ChangeReferenceNum float32 `json:"change-reference-num"`
-	// ReservedFree       string  `json:"reserved-free"`
-	// CreatedTime        string  `json:"created-time"`
-	// ReservedSupport    string  `json:"reserved-support"`
+}
+
+type translationJsonItem struct {
+	*TranslationItem
+	UpdateBy           string  `json:"update-by"`
+	UpdateTime         string  `json:"update-time"`
+	UpdateDate         string  `json:"update-date"`
+	CreatedBy          string  `json:"created-by"`
+	CreatedDate        string  `json:"created-date"`
+	ReservedStandard   string  `json:"reserved-standard"`
+	ReservedCustom     string  `json:"reserved-custom"`
+	ChangeReferenceNum float32 `json:"change-reference-num"`
+	ReservedFree       string  `json:"reserved-free"`
+	CreatedTime        string  `json:"created-time"`
+	ReservedSupport    string  `json:"reserved-support"`
 }
 
 func (s *TranslationModel) New() DataLoaderData {
